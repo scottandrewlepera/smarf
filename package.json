@@ -4,7 +4,7 @@
   "description": "A static weblog generator",
   "main": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc --outDir build index.ts; node ./build/index.js"
   },
   "author": "scottandrew",
   "license": "ISC",
