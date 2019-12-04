@@ -20,6 +20,7 @@ export interface Blog {
     authors?: Author[];
     archiveFormat: ArchiveFormat;
     archiveWithSlug: boolean;
+    indexPosts?: number;
 }
 
 export interface Tag {
@@ -27,16 +28,21 @@ export interface Tag {
     text: string;
 }
 
+export type PostStatus = 'draft' | 'publish';
+
 export interface Post {
-    guid: string;
     date: Date;
     title: string;
     author: Author;
+    guid?: string;
     content?: string;
     excerpt?: string;
     slug?: string;
     tags?: Tag[];
     thumbnail_image?: string;
     opengraph_image?: string;
+    previous_link?: Link;
+    next_link?: Link;
+    status: PostStatus;
 }
 
