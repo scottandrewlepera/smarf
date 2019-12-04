@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+    xmlns:content="http://purl.org/rss/1.0/modules/content/"
+    xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:atom="http://www.w3.org/2005/Atom"
+    xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+    xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+    >
+
+<channel>
+    <title>Scott Andrew</title>
+    <atom:link href="https://scottandrew.com/feed" rel="self" type="application/rss+xml" />
+    <link>https://scottandrew.com</link>
+    <description>Scott Andrew makes stuff for the web, writes songs and plays in bands. He thinks you&#039;re pretty cool.</description>
+    <lastBuildDate></lastBuildDate>
+    <language>en-US</language>
+    <sy:updatePeriod>hourly</sy:updatePeriod>
+    <sy:updateFrequency>1</sy:updateFrequency>
+    <generator></generator>
+    <item>
+        <title><![CDATA[???]]></title>
+        <link></link>
+        <pubDate>Fri, 29 Nov 2019 19:31:42 +0000</pubDate>
+        <dc:creator><![CDATA[scottandrew]]></dc:creator>
+        <category><![CDATA[general]]></category>
+        <guid isPermaLink="false">http://scottandrew.com/wordpress/?p=7260</guid>
+        <description><![CDATA[]]></description>
+        <content:encoded><![CDATA[]]></content:encoded>
+    </item>
+</channel>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <title>Scott Andrew</title>
+</head>
+
+<body>
+    <nav>
+        <a href="https://scottandrew.com">Scott Andrew</a>
+    </nav>
+
+    <h1>Hello, world!</h1>
+
+    <p>If you're reading this, hello! I have torn down this weblog, down
+        to this single index page. There is no styling, no dynamic
+        content, no scripts, no archives, no tags or categories. Just a
+        fresh start,
+        right here.</p>
+
+    <p>I'm going to rebuild this blog as a static site. I mentioned last
+        week that I have to change hosting providers and wasn't looking
+        forward to moving this website. But I got to thinking about how
+        a lot of what I've maintained here over the years isn't really
+        useful anymore. I really don't want to wrangle with Wordpress or
+        other blogging software. Most of the custom programming I've
+        done has been to support defunct things like the Demo Club and
+        email lists. So there no good reason to keep maintaining a
+        database and PHP install.</p>
+
+    <p>I've looked into all the hot new static site generators and while
+        there's a ton of them, I'm not excited by any of them. Plus,
+        there's always <em>something</em> that needs custom hacking, and
+        the hacking part is fun. And it's been awhile since I've hacked
+        something together just for myself.</p>
+
+    <p>So I'm going to write my own static blog generator, and blog
+        about it here. It's the perfect time for this. We're sliding
+        into winter, and I need a project. I'm not writing any music.
+        I'm 20 pages deep into a comic script that I have no energy to
+        start drawing yet. So yeah, let's do this!</p>
+
+    <h2>Eating an elephant</h2>
+
+    <p>I'm making a promise to myself right now that I'm only going to
+        work on one tiny feature at a time and go easy on myself. This
+        is how I finished THE LAST REUNION SHOW, basically a panel or
+        two every evening was enough to feel like I'd done something.
+    </p>
+
+    <p>I have some very basic requirements:</p>
+
+    <ul>
+        <li>File-based, so I can add a post by saving a file from a text
+            editor.</li>
+        <li>Markdown support, so I don't have to write out HTML for
+            unordered lists like this one, grrr.</li>
+        <li>A common metadata format, probably based on frontmatter.
+        </li>
+        <li>Next and previous post links, by publication date.</li>
+        <li>Support for image metadata like thumbnails and OpenGraph
+            images -- this will be handy for migrating Neat Hobby!</li>
+        <li>An RSS or Atom feed.</li>
+        <li>Archives by date.</li>
+    </ul>
+
+    <p>The first three are the most important, the bare "minimum viable
+        product"</p>
+
+    <p>Things I can live without:</p>
+
+    <ul>
+        <li>Pagination.</li>
+        <li>Archives by category or tag.</li>
+        <li>Hosted, remote administration. I don't want to run any
+            executables on the server, I'll just FTP it old school.</li>
+        <li>Comments (see note about executables above).</li>
+        <li>Built-in search (just Google it).</li>
+        <li>Trackback, site pings, notifications, etc.</li>
+    </ul>
+
+    <p>This is gonna be basic computer stuff: file management, text
+        parsing, simple graphing challenges, building indexes. I'm not
+        inventing <em>anything</em> new at all &mdash; and yet, I'm excited? I
+        just wanna build something.</p>
+
+    <time datetime="2019-12-03T20:00:00">3 December 2019</time>
+
+</body>
+
+</html>
