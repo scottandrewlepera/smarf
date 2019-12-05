@@ -5,7 +5,7 @@ const TypeChecker = createCheckers(exportedTypeSuite);
 
 export function checkType(object: any, type: string) {
     if (!TypeChecker[type]) {
-        throw new Error(`checkType: type ${type} is undefined.`)
+        throw new Error(`checkType: type ${type} is undefined.`);
     }
     try {
         TypeChecker[type].check(object);
