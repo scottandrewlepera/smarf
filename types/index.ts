@@ -1,10 +1,10 @@
-export interface Link {
+export type Link = {
     text: string;
     title: string;
     url: string;
 }
 
-export interface Author {
+export type Author = {
     name: string;
     contact?: string;
     urls?: Link[];
@@ -12,7 +12,7 @@ export interface Author {
 
 export type ArchiveFormat = 'YearMonthDay' | 'YearMonth';
 
-export interface Blog {
+export type Blog = {
     title: string;
     url: string;
     description?: string;
@@ -23,15 +23,15 @@ export interface Blog {
     indexPosts?: number;
 }
 
-export interface Tag {
+export type Tag = {
     name: string;
     text: string;
 }
 
 export type PostStatus = 'draft' | 'publish';
 
-export interface Post {
-    date: Date;
+export type Post = {
+    date: string;
     title: string;
     author: Author;
     guid?: string;

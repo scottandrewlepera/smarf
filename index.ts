@@ -1,5 +1,8 @@
-import { Blog } from './types'; 
-import { loadConfig } from './src/';
+import { checkType } from './src/checkType';
 
-const config: Blog = loadConfig();
-console.log(config);
+const CONFIG_PATH = '../blog_config.json';
+const config = require(CONFIG_PATH);
+
+checkType(config, 'Blog');
+
+console.log('Blog config loaded and validated.');

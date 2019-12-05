@@ -12,15 +12,18 @@
             "contact": "scottandrew@gmail.com",
             "urls" : [
                 {
-                    "title": "scottandrew.com",
+                    "title": "Link to scottandrew.com",
+                    "text": "Website",
                     "url": "https://scottandrew.com"
                 },
                 {
-                    "title": "Twitter",
+                    "title": "Link to Twitter",
+                    "text": "Twitter",
                     "url": "https://twitter.com/scottandrew"
                 },
                 {
-                    "title": "Instagram",
+                    "title": "Link to Instagram",
+                    "text": "Instagram",
                     "url": "https://twitter.com/scottandrew"
                 }
             ]
