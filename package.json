@@ -5,12 +5,14 @@
   "main": "index.ts",
   "scripts": {
     "build": "npm run gen-types; tsc --outDir build index.ts; node ./build/index.js",
-    "gen-types" : "`npm bin`/ts-interface-builder types/index.ts"
+    "gen-types": "`npm bin`/ts-interface-builder types/index.ts"
   },
   "author": "scottandrew",
   "license": "ISC",
   "dependencies": {
     "@types/node": "^12.12.14",
+    "date-format": "^3.0.0",
+    "minimist": "^1.2.0",
     "ts-interface-checker": "^0.1.9"
   },
   "devDependencies": {
