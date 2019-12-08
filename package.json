@@ -12,6 +12,7 @@
   "dependencies": {
     "@types/node": "^12.12.14",
     "date-format": "^3.0.0",
+    "frontmatter": "0.0.3",
     "minimist": "^1.2.0",
     "ts-interface-checker": "^0.1.9"
   },

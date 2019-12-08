@@ -12,6 +12,7 @@ exports.Link = t.iface([], {
 });
 exports.Author = t.iface([], {
     "name": "string",
+    "author_uid": "string",
     "contact": t.opt("string"),
     "urls": t.opt(t.array("Link"))
 });
@@ -19,12 +20,14 @@ exports.ArchiveFormat = t.union(t.lit('YearMonthDay'), t.lit('YearMonth'));
 exports.Blog = t.iface([], {
     "title": "string",
     "url": "string",
+    "root": "string",
     "description": t.opt("string"),
     "language": t.opt("string"),
     "authors": t.opt(t.array("Author")),
-    "archiveFormat": "ArchiveFormat",
-    "archiveWithSlug": "boolean",
-    "indexPosts": t.opt("number")
+    "archive_format": "ArchiveFormat",
+    "archive_with_slug": "boolean",
+    "index_posts": t.opt("number"),
+    "default_opengraph_image": t.opt("string")
 });
 exports.Tag = t.iface([], {
     "name": "string",
@@ -34,7 +37,7 @@ exports.PostStatus = t.union(t.lit('draft'), t.lit('publish'));
 exports.Post = t.iface([], {
     "date": "string",
     "title": "string",
-    "author": "Author",
+    "author_uid": "string",
     "guid": t.opt("string"),
     "content": t.opt("string"),
     "excerpt": t.opt("string"),

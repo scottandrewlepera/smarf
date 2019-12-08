@@ -12,6 +12,7 @@ export const Link = t.iface([], {
 
 export const Author = t.iface([], {
   "name": "string",
+  "author_uid": "string",
   "contact": t.opt("string"),
   "urls": t.opt(t.array("Link")),
 });
@@ -21,12 +22,14 @@ export const ArchiveFormat = t.union(t.lit('YearMonthDay'), t.lit('YearMonth'));
 export const Blog = t.iface([], {
   "title": "string",
   "url": "string",
+  "root": "string",
   "description": t.opt("string"),
   "language": t.opt("string"),
   "authors": t.opt(t.array("Author")),
-  "archiveFormat": "ArchiveFormat",
-  "archiveWithSlug": "boolean",
-  "indexPosts": t.opt("number"),
+  "archive_format": "ArchiveFormat",
+  "archive_with_slug": "boolean",
+  "index_posts": t.opt("number"),
+  "default_opengraph_image": t.opt("string"),
 });
 
 export const Tag = t.iface([], {
@@ -39,7 +42,7 @@ export const PostStatus = t.union(t.lit('draft'), t.lit('publish'));
 export const Post = t.iface([], {
   "date": "string",
   "title": "string",
-  "author": "Author",
+  "author_uid": "string",
   "guid": t.opt("string"),
   "content": t.opt("string"),
   "excerpt": t.opt("string"),

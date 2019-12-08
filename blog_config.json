@@ -1,14 +1,17 @@
 {
     "title": "Scott Andrew",
     "url": "https://scottandrew.com",
+    "root": "archive",
     "description": "Scott Andrew makes stuff for the web, draws comics, and plays in bands. He thinks you're pretty cool.",
     "language": "en-US",
-    "archiveFormat": "YearMonthDay",
-    "archiveWithSlug": true,
-    "indexPosts": 10,
+    "archive_format": "YearMonthDay",
+    "archive_with_slug": true,
+    "index_posts": 10,
+    "default_opengraph_image": "https://scottandrew.com/some_image.jpg",
     "authors" : [
         {
             "name": "Scott Andrew",
+            "author_uid": "scottandrew",
             "contact": "scottandrew@gmail.com",
             "urls" : [
                 {
