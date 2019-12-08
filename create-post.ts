@@ -1,11 +1,10 @@
 import { checkType } from './src/checkType';
 import { Post, Blog, Link } from './types/';
-import { link } from 'fs';
+import { getPostData } from './src/utils';
 const CONFIG_PATH = './blog_config.json';
 const blog: Blog = require(CONFIG_PATH);
 const minimist = require('minimist');
 const format = require('date-format');
-const frontmatter = require('frontmatter');
 const fs = require('fs');
 
 const POST_FILENAME_DATE_FORMAT = 'yyyy-MM-dd_hh-mm-ss-SSS';
@@ -91,7 +90,7 @@ function createFormattedArchivePath(blog: Blog, titleSlug: string, date: Date): 
         (blog.archive_format === 'YearMonthDay') ? 'yyyy/MM/dd' : 'yyyy/MM';
     const dateFragment = 
         format.asString(formattedArchivePath, date);
-    return `${blog.url}/${blog.root}/${dateFragment}/${titleSlug}/`;
+    return `/${blog.root}/${dateFragment}/${titleSlug}/`;
 }
 
 function createPostContent(post: Post): string {
@@ -137,11 +136,6 @@ function getPreviousNextFileNames(filename: string): any {
     return indexes;
 }
 
-function getPostData(filename: string): object {
-    const postContents = fs.readFileSync(`./posts/${filename}`, { encoding: 'utf8' });
-    return frontmatter(postContents);
-}
-
 function getPreviousNextLinks(filenames: any): any {
     const links: any = {};
     Object.keys(filenames).forEach( key => {
@@ -150,7 +144,7 @@ function getPreviousNextLinks(filenames: any): any {
             const link: Link = {
                 url: parsed.data.guid,
                 text: parsed.data.title,
-                title: `Link to ${key} post - '${parsed.data.title}'`
+                title: `Link to ${key} post - ${parsed.data.title}`
             }
             links[key] = link;
         }

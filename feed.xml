@@ -1,4 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rss version="2.0.1"
     xmlns:content="http://purl.org/rss/1.0/modules/content/"
     xmlns:wfw="http://wellformedweb.org/CommentAPI/"
     xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -9,22 +11,288 @@
 
 <channel>
     <title>Scott Andrew</title>
-    <atom:link href="https://scottandrew.com/feed" rel="self" type="application/rss+xml" />
+    <atom:link href="https://scottandrew.com/feed.xml" rel="self" type="application/rss+xml" />
     <link>https://scottandrew.com</link>
-    <description>Scott Andrew makes stuff for the web, writes songs and plays in bands. He thinks you&#039;re pretty cool.</description>
-    <lastBuildDate></lastBuildDate>
+    <description>Scott Andrew makes stuff for the web, draws comics, and plays in bands. He thinks you&#039;re pretty cool.</description>
+    <lastBuildDate>Sun, 08 Dec 2019 12:00:00 +0000</lastBuildDate>
     <language>en-US</language>
     <sy:updatePeriod>hourly</sy:updatePeriod>
     <sy:updateFrequency>1</sy:updateFrequency>
-    <generator></generator>
+    <generator>Smarf 0.1</generator>
     <item>
-        <title><![CDATA[???]]></title>
-        <link></link>
-        <pubDate>Fri, 29 Nov 2019 19:31:42 +0000</pubDate>
+        <title><![CDATA[Some admin notes]]></title>
+        <link>https://scottandrew.com</link>
+        <pubDate>Tue, 05 Dec 2019 20:00:00 +0000</pubDate>
         <dc:creator><![CDATA[scottandrew]]></dc:creator>
-        <category><![CDATA[general]]></category>
-        <guid isPermaLink="false">http://scottandrew.com/wordpress/?p=7260</guid>
+        <guid isPermaLink="false">http://scottandrew.com/#some_admin_notes</guid>
+        <content:encoded><![CDATA[
+<p>If this blog is acting wobbly in your feed reader, it's probably because I'm updating the RSS feed by hand and getting things horribly wrong. There are no permalinks yet and the pub dates are basically lies. Hopefully this will be temporary, as generating a feed is the first priority of this project. But that's still a long way away. So my apologies if you start seeing re-published entries and the like.</p>
+            <p>Also, I just couldn't take the vanilla, 1993 hypertext look anymore so I had to add a bit of styling, which you won't see in a feed reader.</p>
+        ]]></content:encoded>
+    </item>
+    <item>
+        <title><![CDATA[Adventures in JS type checking]]></title>
+        <link>https://scottandrew.com</link>
+        <pubDate>Tue, 05 Dec 2019 20:00:00 +0000</pubDate>
+        <dc:creator><![CDATA[scottandrew]]></dc:creator>
+        <guid isPermaLink="false">http://scottandrew.com/#adventures_in_JS_type_checking</guid>
+        <content:encoded><![CDATA[
+<p>In the last post I made a config file for this blog project that conformed to the <code>Blog</code> interface described in a previous post. The goal was to have the app load this file and validate it. I got stuck almost immediately.</p>
+            <p>TypeScript interfaces aren't actually that useful for data validation. That's because TS types are only used when you're <em>developing</em> the application. They're not used when you <em>run</em> the application. In fact, they're removed from the final codebase during compilation.</p>
+            <p>This feels counterintuitive. If you write a function that takes an argument of type <code>Foo</code>, and then elsewhere write some code that calls that function with a value of type <code>Bar</code>, the compiler (and maybe your IDE) will yell at you. But if your application loads some data from a file or Ajax request and passes it to that function, it's too late to check if that data conforms to the <code>Foo</code> type definition.</p>
+            <p>That's basically what this blog application is going to do: load a lot of JSON, YAML and Markdown text and parse it into HTML files at runtime. This TypeScript caveat means that the app can't tell if a blog post is missing a required field, like a title, unless I write code that checks for it and every other required field. So what's the use of having types if we can't use them for data validation when it counts?</p>
+            <p>OSS to the rescue. The <a href="https://www.npmjs.com/package/ts-interface-checker">ts-interface-checker</a> library generates data validators from TypeScript type definitions. These validators (called "checkers") can be used at runtime, so we can take an data object, like a blog post, and check that it conforms to the <code>Post</code> type, even though the type itself was compiled out of the codebase.</p>
+            <p>I added a build step that regenerates the checkers automatically so they stay in sync with the type definitions, then wrote a wrapper function that can check any object type:</p>
+
+            <p>
+<pre>
+    // src/checkType.ts
+
+    import exportedTypeSuite from '../types/index-ti';
+    import { createCheckers } from "ts-interface-checker";
+    
+    const TypeChecker = createCheckers(exportedTypeSuite);
+    
+    export function checkType(object: any, type: string) {
+        if (!TypeChecker[type]) {
+            throw new Error(`checkType: type ${type} is undefined.`);
+        }
+        try {
+            TypeChecker[type].check(object);
+        } catch (err) {
+            console.error(`checkType: object does not validate as type ${type}.`);
+            console.error(err);
+        }
+    }
+    
+    export default checkType;
+</pre>
+            </p>
+
+            <p>Now I can load the blog config JSON file and validate it at runtime!</p>
+
+            <p>
+<pre>
+    // index.js (the main app for now)
+
+    import { checkType } from './src/checkType';
+
+    const CONFIG_PATH = '../blog_config.json';
+    const config = require(CONFIG_PATH);
+    
+    checkType(config, 'Blog');
+    
+    console.log('Blog config loaded and validated.');
+</pre>
+            </p>
+            <p>Before this, my app was happily loading the blog config as an object of type <code>Blog</code>, even if when I removed <em>all of the fields.</em> Now it can tell me exactly what fields are missing or have incorrect types. Perfect.</p>
+        ]]></content:encoded>
+    </item>
+    <item>
+        <title><![CDATA[Baby step: okay let's write some config stuff]]></title>
+        <link>https://scottandrew.com</link>
+        <pubDate>Tue, 04 Dec 2019 23:00:00 +0000</pubDate>
+        <dc:creator><![CDATA[scottandrew]]></dc:creator>
+        <guid isPermaLink="false">http://scottandrew.com/#baby_step_okay_lets_write_some_config_stuff</guid>
+        <content:encoded><![CDATA[
+<p>I created the <code>Blog</code> type interface to describe blog metadata and define things like archive format. The idea here is to write a JSON config file that conforms to this interface:</p>
+            <p>
+<pre>
+    {
+        "title": "Scott Andrew",
+        "url": "https://scottandrew.com",
+        "description": "Scott Andrew makes stuff for the web, draws comics, and plays in bands. He thinks you're pretty cool.",
+        "language": "en-US",
+        "archiveFormat": "YearMonthDay",
+        "archiveWithSlug": true,
+        "indexPosts": 10,
+        "authors" : [
+            {
+                "name": "Scott Andrew",
+                "contact": "scottandrew@gmail.com",
+                "urls" : [
+                    {
+                        "title": "Link to scottandrew.com",
+                        "text": "Website",
+                        "url": "https://scottandrew.com"
+                    },
+                    {
+                        "title": "Link to Twitter",
+                        "text": "Twitter",
+                        "url": "https://twitter.com/scottandrew"
+                    },
+                    {
+                        "title": "Link to Instagram",
+                        "text": "Instagram",
+                        "url": "https://twitter.com/scottandrew"
+                    }
+                ]
+            }
+        ]
+    }
+</pre>
+            </p>
+            <p>As you can see I'm already scope creeping by supporting multiple authors. o_O</p>
+            <p>The next baby step is to just write a simple Node app that loads this config file and validates it.</p>
+        ]]></content:encoded>
+    </item>
+    <item>
+        <title><![CDATA[Let's start with some types]]></title>
+        <link>https://scottandrew.com</link>
+        <pubDate>Tue, 04 Dec 2019 22:00:00 +0000</pubDate>
+        <dc:creator><![CDATA[scottandrew]]></dc:creator>
+        <guid isPermaLink="false">http://scottandrew.com/#lets_start_with_some_types</guid>\
+        <content:encoded><![CDATA[
+
+<p>After more than two decades working with JavaScript I'd become very comfortable with
+    its lack of typing, so I was surprised at how quickly I became a TypeScript
+    adherent.</p>
+
+</p>I find it's almost impossible to start coding without designing types and
+    interfaces for data first.</p>
+
+<p>I started a file under <code>/types/</code> that will export a bunch of interfaces that
+    describe the most common data types:</p>
+
+<p>
+
+<pre>
+    export interface Link {
+        text: string;
+        title: string;
+        url: string;
+    }
+    
+    export interface Author {
+        name: string;
+        contact?: string;
+        urls?: Link[];
+    }
+    
+    export type ArchiveFormat = 'YearMonthDay' | 'YearMonth';
+    
+    export interface Blog {
+        title: string;
+        url: string;
+        description?: string;
+        language?: string;
+        authors?: Author[];
+        archiveFormat: ArchiveFormat;
+        archiveWithSlug: boolean;
+        indexPosts?: number;
+    }
+    
+    export interface Tag {
+        name: string;
+        text: string;
+    }
+    
+    export type PostStatus = 'draft' | 'publish';
+    
+    export interface Post {
+        date: Date;
+        title: string;
+        author: Author;
+        guid?: string;
+        content?: string;
+        excerpt?: string;
+        slug?: string;
+        tags?: Tag[];
+        thumbnail_image?: string;
+        opengraph_image?: string;
+        previous_link?: Link;
+        next_link?: Link;
+        status: PostStatus;
+    }                        
+</pre>
+            </p>
+        ]]></content:encoded>
+    </item>
+    <item>
+        <title><![CDATA[Hello, world!]]></title>
+        <link>https://scottandrew.com</link>
+        <pubDate>Tue, 03 Dec 2019 20:00:00 +0000</pubDate>
+        <dc:creator><![CDATA[scottandrew]]></dc:creator>
+        <category><![CDATA[]]></category>
+        <guid isPermaLink="false">https://scottandrew.com/#hello_world</guid>
         <description><![CDATA[]]></description>
-        <content:encoded><![CDATA[]]></content:encoded>
+        <content:encoded><![CDATA[
+
+            <p>If you're reading this, hello! I have torn down this weblog, down to this
+                single index page. There is no styling, no dynamic content, no scripts, no
+                archives, no tags or categories. Just a fresh start, right here.</p>
+
+            <p>I'm going to rebuild this blog as a static site. I mentioned last week that
+                I have to change hosting providers and wasn't looking forward to moving
+                this website. I got to thinking about how a lot of what I've maintained
+                here over the years isn't really useful anymore. I really don't want to
+                wrangle with Wordpress or other blogging software. Most of the custom
+                programming I've done has been to support defunct things like the Demo
+                Club and email lists. So there no good reason to keep maintaining a
+                database and PHP install.</p>
+
+            <p>I've looked into all the hot new static site generators and while there's a
+                <a href="https://www.staticgen.com/">ton of them</a>, I'm not excited by
+                any of them. Plus, there's always <em>something</em> that needs custom
+                hacking, and the hacking part is fun. And it's been awhile since I've
+                hacked something together just for myself.</p>
+
+            <p>So I'm going to write my own static blog generator, and blog about it here.
+                It's the perfect time for this. We're sliding into winter, and I need a
+                project. I'm not writing any music. I'm 20 pages deep into a comic script
+                that I have no energy to start drawing yet. So yeah, let's do this!</p>
+
+            <h2>Eating an elephant</h2>
+
+            <p>I'm making a promise to myself right now that I'm only going to work on one
+                tiny feature at a time and go easy on myself. This is how I finished <a
+                    href="https://neathobby.com/special/the-last-reunion-show/">THE LAST
+                    REUNION SHOW</a> &mdash; basically a panel or two every evening was
+                enough to feel like I'd done something.
+            </p>
+
+            <p>I have some very basic requirements:</p>
+
+            <ul>
+                <li>File-based, so I can add a post by saving a file from a text editor.
+                </li>
+                <li><a href="https://www.markdownguide.org/basic-syntax">Markdown</a>
+                    support, so I don't have to write out HTML for unordered lists like
+                    this one, grrr.</li>
+                <li>A common metadata format, probably based on <a
+                        href="https://gohugo.io/content-management/front-matter/">front
+                        matter</a>. </li>
+                <li>Next and previous post links, by publication date. </li>
+                <li>Support for image metadata like thumbnails, <a
+                        href="https://ogp.me/">OpenGraph</a> images and <a
+                        href="https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/abouts-cards">Twitter
+                        cards</a> &mdash; this will be handy for migrating Neat Hobby!
+                </li>
+                <li>An RSS feed.</li>
+                <li>Archives by date.</li>
+            </ul>
+
+            <p>The first three are the most important, the bare "minimum viable product"
+            </p>
+
+            <p>Things I can live without:</p>
+
+            <ul>
+                <li>Pagination.</li>
+                <li>Archives by category or tag.</li>
+                <li>Hosted, remote administration. I don't want to run any executables on
+                    the server, I'll just FTP it old school.</li>
+                <li>Comments (see note about executables above).</li>
+                <li>Built-in search (just Google it).</li>
+                <li>Trackback, site pings, notifications, etc.</li>
+            </ul>
+
+            <p>This is gonna be basic computer stuff: file management, text parsing,
+                simple graphing challenges, building indexes. I'm not inventing
+                <em>anything</em> new at all &mdash; and yet, I'm excited? I just wanna
+                build something, and that's a helluva lot more interesting than migrating
+                this creaky old site to a new home.</p>
+                <time datetime="2019-12-03T20:00:00">3 December 2019</time>]]></content:encoded>
     </item>
 </channel>
+</rss>

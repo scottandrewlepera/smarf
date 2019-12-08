@@ -1,14 +1,14 @@
 export type Link = {
     text: string;
-    title?: string;
-    url: string;
+    title?: string | null;
+    url: string | null;
 }
 
 export type Author = {
     name: string;
-    author_uid: string;
-    contact?: string;
-    urls?: Link[];
+    author_uid: string | null;
+    contact?: string | null;
+    urls?: Link[] | null;
 }
 
 export type ArchiveFormat = 'YearMonthDay' | 'YearMonth';
@@ -37,15 +37,15 @@ export type Post = {
     date: string;
     title: string;
     author_uid: string;
-    guid?: string;
-    content?: string;
-    excerpt?: string;
-    slug?: string;
-    tags?: Tag[];
-    thumbnail_image?: string;
-    opengraph_image?: string;
-    previous_link?: Link;
-    next_link?: Link;
+    guid?: string | null;
+    content?: string | null;
+    excerpt?: string | null;
+    slug?: string | null;
+    tags?: Tag[] | null;
+    thumbnail_image?: string | null;
+    opengraph_image?: string | null;
+    previous_link?: Link | null;
+    next_link?: Link | null;
     status: PostStatus;
 }
 

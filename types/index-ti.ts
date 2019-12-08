@@ -6,15 +6,15 @@ import * as t from "ts-interface-checker";
 
 export const Link = t.iface([], {
   "text": "string",
-  "title": "string",
-  "url": "string",
+  "title": t.opt(t.union("string", "null")),
+  "url": t.union("string", "null"),
 });
 
 export const Author = t.iface([], {
   "name": "string",
-  "author_uid": "string",
-  "contact": t.opt("string"),
-  "urls": t.opt(t.array("Link")),
+  "author_uid": t.union("string", "null"),
+  "contact": t.opt(t.union("string", "null")),
+  "urls": t.opt(t.union(t.array("Link"), "null")),
 });
 
 export const ArchiveFormat = t.union(t.lit('YearMonthDay'), t.lit('YearMonth'));
@@ -43,15 +43,15 @@ export const Post = t.iface([], {
   "date": "string",
   "title": "string",
   "author_uid": "string",
-  "guid": t.opt("string"),
-  "content": t.opt("string"),
-  "excerpt": t.opt("string"),
-  "slug": t.opt("string"),
-  "tags": t.opt(t.array("Tag")),
-  "thumbnail_image": t.opt("string"),
-  "opengraph_image": t.opt("string"),
-  "previous_link": t.opt("Link"),
-  "next_link": t.opt("Link"),
+  "guid": t.opt(t.union("string", "null")),
+  "content": t.opt(t.union("string", "null")),
+  "excerpt": t.opt(t.union("string", "null")),
+  "slug": t.opt(t.union("string", "null")),
+  "tags": t.opt(t.union(t.array("Tag"), "null")),
+  "thumbnail_image": t.opt(t.union("string", "null")),
+  "opengraph_image": t.opt(t.union("string", "null")),
+  "previous_link": t.opt(t.union("Link", "null")),
+  "next_link": t.opt(t.union("Link", "null")),
   "status": "PostStatus",
 });
 
