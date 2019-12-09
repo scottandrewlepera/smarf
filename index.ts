@@ -4,7 +4,7 @@ import * as utils from './src/utils';
 const CONFIG_PATH = '../blog_config.json';
 const blog = require(CONFIG_PATH);
 const fs = require('fs');
-var markdown = require( "markdown" ).markdown;
+var markdown = require('markdown-it')({ html: true });
 
 import { rssItemTemplate, rssFeedTemplate} from './templates/rss.js';
 
@@ -25,16 +25,22 @@ function buildIndexes(posts: any[], blog: Blog) {
     const rssItems: string[] = [];
     const indexItems: string[] = [];
     const lastNPosts = sourceFiles.slice(sourceFiles.length - blog.index_posts);
-    Array.from(lastNPosts).forEach( filename => {
+    Array.from(lastNPosts.reverse()).forEach( filename => {
         const fileContents: any = utils.getPostData(filename);
         const post: Post = JSON.parse(JSON.stringify(fileContents.data));
         checkType(post, 'Post');
-        post.content = markdown.toHTML(JSON.parse(JSON.stringify(fileContents.content)));
-        rssItems.push(rssItemTemplate(post, blog));
+        if (post.status === 'publish') {
+            post.content = markdown.render(JSON.parse(JSON.stringify(fileContents.content)));
+            rssItems.push(rssItemTemplate(post, blog));
+        }
     });
+    if (!rssItems.length) {
+        console.log('No published posts found! XML file will be empty!');
+    }
     const feedContent = rssFeedTemplate(blog, rssItems);
     createIndexFile('feed.xml', feedContent);
     console.log('Created RSS feed XML file.');
+    
 }
 
 function createIndexFile(filename, content) {

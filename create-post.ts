@@ -1,7 +1,7 @@
 import { checkType } from './src/checkType';
 import { Post, Blog, Link } from './types/';
 import { getPostData } from './src/utils';
-const CONFIG_PATH = './blog_config.json';
+const CONFIG_PATH = '../blog_config.json';
 const blog: Blog = require(CONFIG_PATH);
 const minimist = require('minimist');
 const format = require('date-format');
@@ -49,7 +49,7 @@ function createEmptyPost(title: string) {
         title: title,
         date: postDate,
         author_uid: blog.authors[0].author_uid,
-        status: 'draft',
+        status: 'publish',
         slug: titleSlug,
         guid: postLink,
         previous_link: links.previous,
@@ -71,7 +71,7 @@ function updatePreviousPost(filename: string, post: Post) {
     const nextLink: Link = {
         url: post.guid,
         text: post.title,
-        title: `Link to next post - ${post.title}`
+        title: `"Link to next post - ${post.title}"`
     }
     newPost.next_link = nextLink;
 
@@ -96,7 +96,7 @@ function createFormattedArchivePath(blog: Blog, titleSlug: string, date: Date): 
 function createPostContent(post: Post): string {
 
     return `---
-title: ${post.title}
+title: "${post.title}"
 date: ${post.date}
 status: ${post.status}
 author_uid: ${post.author_uid}
@@ -104,16 +104,16 @@ slug: ${post.slug}
 guid: ${post.guid}
 previous_link: ${ !post.previous_link ? '' :`
     url: ${post.previous_link.url || null }
-    text: ${post.previous_link.text || null }
-    title: ${post.previous_link.title || null }`}
+    text: "${post.previous_link.text || null }"
+    title: "${post.previous_link.title || null }"`}
 next_link: ${ !post.next_link ? '' :`
     url: ${post.next_link.url || null }
-    text: ${post.next_link.text || null }
-    title: ${post.next_link.title || null }`}
+    text: "${post.next_link.text || null }"
+    title: "${post.next_link.title || null }"`}
 thumbnail_image: ${post.thumbnail_image || '' }
 opengraph_image: ${post.opengraph_image || '' }
 tags: ${post.tags || '' }
-excerpt: ${post.excerpt || '' }
+excerpt: "${post.excerpt || '' }"
 
 ---
 
