@@ -37,6 +37,7 @@ export type Post = {
     date: string;
     title: string;
     author_uid: string;
+    filename?: string;
     guid?: string | null;
     content?: string | null;
     excerpt?: string | null;
@@ -48,4 +49,6 @@ export type Post = {
     next_link?: Link | null;
     status: PostStatus;
 }
+
+export type Template = (posts: Post[], blog: Blog) => string;
 

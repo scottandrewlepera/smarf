@@ -48,6 +48,7 @@ function createEmptyPost(title: string) {
     const post: Post = {
         title: title,
         date: postDate,
+        filename: filename,
         author_uid: blog.authors[0].author_uid,
         status: 'publish',
         slug: titleSlug,
@@ -58,25 +59,6 @@ function createEmptyPost(title: string) {
 
     createPostFile(filename, createPostContent(post));
     console.log(`Created file for post: ${post.title}`);
-
-    if (links.previous) {
-        updatePreviousPost(linkFileNames.previous, post);
-    }
-}
-
-function updatePreviousPost(filename: string, post: Post) {
-    const previousPost: any = getPostData(filename);
-    const newPost: Post = JSON.parse(JSON.stringify(previousPost.data));
-    newPost.content = previousPost.content;
-    const nextLink: Link = {
-        url: post.guid,
-        text: post.title,
-        title: `"Link to next post - ${post.title}"`
-    }
-    newPost.next_link = nextLink;
-
-    createPostFile(filename, createPostContent(newPost));
-    console.log(`Updated previous post: ${newPost.title}`);
 }
 
 function createTitleSlug(title: string): string {
@@ -98,18 +80,11 @@ function createPostContent(post: Post): string {
     return `---
 title: "${post.title}"
 date: ${post.date}
+filename: ${post.filename}
 status: ${post.status}
 author_uid: ${post.author_uid}
 slug: ${post.slug}
 guid: ${post.guid}
-previous_link: ${ !post.previous_link ? '' :`
-    url: ${post.previous_link.url || null }
-    text: "${post.previous_link.text || null }"
-    title: "${post.previous_link.title || null }"`}
-next_link: ${ !post.next_link ? '' :`
-    url: ${post.next_link.url || null }
-    text: "${post.next_link.text || null }"
-    title: "${post.next_link.title || null }"`}
 thumbnail_image: ${post.thumbnail_image || '' }
 opengraph_image: ${post.opengraph_image || '' }
 tags: ${post.tags || '' }
