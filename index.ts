@@ -15,15 +15,18 @@ console.log('Indexing source files...')
 const sourceFiles: any[] = fs.readdirSync('./posts');
 console.log(`Processing ${sourceFiles.length} post files.`);
 
-const lastNPosts = sourceFiles.reverse().slice(sourceFiles.length - blog.index_posts);
+const sliceAt = (sourceFiles.length > blog.index_posts) ?
+                sourceFiles.length - blog.index_posts : sourceFiles.length;
+
+const lastNPosts = sourceFiles.reverse().slice(sliceAt);
 
 console.log('Building indexes...');
 
-const feedContent = buildIndexes(lastNPosts, blog, rssTemplate);
+const feedContent = buildIndexes(sourceFiles.reverse(), blog, rssTemplate);
 createIndexFile('feed.xml', feedContent);
 console.log('Created RSS feed XML file.');
 
-const htmlIndexContent = buildIndexes(lastNPosts, blog, htmlIndexTemplate);
+const htmlIndexContent = buildIndexes(sourceFiles.reverse(), blog, htmlIndexTemplate);
 createIndexFile('index.html', htmlIndexContent);
 console.log('Created HTML index file.');
 

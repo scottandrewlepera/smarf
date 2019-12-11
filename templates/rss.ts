@@ -1,4 +1,5 @@
 import { Blog, Post, Template } from '../types';
+const format = require('date-format');
 
 export const rssTemplate: Template = (posts: Post[], blog: Blog): string => {
     const rssHeader = rssFeedHeader(blog);
@@ -35,7 +36,7 @@ const rssFeedHeader = (blog: Blog) => {
     <title>${blog.title}</title>
     <link>${blog.url}</link>
     <description>${blog.description}</description>
-    <lastBuildDate>${ new Date() }</lastBuildDate>
+    <lastBuildDate>${ format.asString('yyyy-MM-dd hh:mm:ss', new Date()) }</lastBuildDate>
     <language>${blog.language}</language>
     <sy:updatePeriod>hourly</sy:updatePeriod>
     <sy:updateFrequency>1</sy:updateFrequency>

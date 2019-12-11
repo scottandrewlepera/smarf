@@ -4,8 +4,9 @@
   "description": "A static weblog generator",
   "main": "index.ts",
   "scripts": {
-    "build": "npm run gen-types; tsc --outDir build index.ts create-post.ts; node ./build/index.js",
-    "gen-types": "`npm bin`/ts-interface-builder types/index.ts"
+    "build": "npm run clean; npm run gen-types; tsc --outDir build index.ts create-post.ts; node ./build/index.js",
+    "gen-types": "`npm bin`/ts-interface-builder types/index.ts",
+    "clean": "rm -rf build html/*"
   },
   "author": "scottandrew",
   "license": "ISC",
