@@ -1,7 +1,7 @@
 import { Blog, Post, Template } from '../types';
 
 export const htmlIndexTemplate: Template = (posts: Post[], blog: Blog): string => {
-    const headerHTML = htmlHeaderTemplate(blog, (posts.length === 1) ? posts[0] : null);
+    const headerHTML = htmlHeaderTemplate(blog);
     const footerHTML = htmlFooterTemplate(blog);
     let html = '';
     posts.forEach( post => {
@@ -11,6 +11,23 @@ export const htmlIndexTemplate: Template = (posts: Post[], blog: Blog): string =
         </article>
         `;
     });
+
+    return `${headerHTML}
+    ${html}
+    ${footerHTML}`;
+}
+
+export const htmlPostTemplate: Template = (post: Post, blog: Blog): string => {
+    const headerHTML = htmlHeaderTemplate(blog, post);
+    const footerHTML = htmlFooterTemplate(blog);
+    let html = `<article>
+        <h1><a href="${post.guid}">${post.title}</a></h1>
+        ${post.content}
+        <hr />
+        ${ post.previous_link ? `<p>Previously: <a href="${post.previous_link.url}">${post.previous_link.text}</a></p>` : ''}
+        ${ post.next_link ? `<p>Next: <a href="${post.next_link.url}">${post.next_link.text}</a></p>` : ''}
+        </article>
+        `;
 
     return `${headerHTML}
     ${html}
@@ -77,7 +94,7 @@ export const htmlHeaderTemplate = (blog: Blog, post?: Post): string => {
     <body>
         <header>
             <nav>
-                <a href="${blog.url}" title="${title}">${title}</a>
+                <a href="${blog.url}" title="${blog.title}">${blog.title}</a>
             </nav>
         </header>
         <main>

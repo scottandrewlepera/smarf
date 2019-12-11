@@ -1,6 +1,5 @@
 import { checkType } from './src/checkType';
 import { Post, Blog, Link } from './types/';
-import { getPostData } from './src/utils';
 const CONFIG_PATH = '../blog_config.json';
 const blog: Blog = require(CONFIG_PATH);
 const minimist = require('minimist');
@@ -43,7 +42,6 @@ function createEmptyPost(title: string) {
     const filename = `${formattedDate}_${titleSlug}.md`;
 
     const linkFileNames = getPreviousNextFileNames(filename);
-    const links: any = getPreviousNextLinks(linkFileNames);
 
     const post: Post = {
         title: title,
@@ -52,9 +50,7 @@ function createEmptyPost(title: string) {
         author_uid: blog.authors[0].author_uid,
         status: 'publish',
         slug: titleSlug,
-        guid: postLink,
-        previous_link: links.previous,
-        next_link: links.next
+        guid: postLink
     };
 
     createPostFile(filename, createPostContent(post));
@@ -110,21 +106,3 @@ function getPreviousNextFileNames(filename: string): any {
     indexes.next = dir[dir.indexOf(filename) + 1];
     return indexes;
 }
-
-function getPreviousNextLinks(filenames: any): any {
-    const links: any = {};
-    Object.keys(filenames).forEach( key => {
-        if (filenames[key]) {
-            const parsed: any = getPostData(filenames[key]);
-            const link: Link = {
-                url: parsed.data.guid,
-                text: parsed.data.title,
-                title: `Link to ${key} post - ${parsed.data.title}`
-            }
-            links[key] = link;
-        }
-    })
-
-    return links;
-}
-

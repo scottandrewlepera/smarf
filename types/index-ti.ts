@@ -56,7 +56,7 @@ export const Post = t.iface([], {
   "status": "PostStatus",
 });
 
-export const Template = t.func("string", t.param("posts", t.array("Post")), t.param("blog", "Blog"));
+export const Template = t.func("string", t.param("posts", t.union("Post", t.array("Post"))), t.param("blog", "Blog"));
 
 const exportedTypeSuite: t.ITypeSuite = {
   Link,

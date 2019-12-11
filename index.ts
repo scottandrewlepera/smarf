@@ -1,13 +1,12 @@
 import { checkType } from './src/checkType';
-import { Post, Blog, Link } from './types/index';
+import { Post, Blog, Link, Template } from './types/index';
 import * as utils from './src/utils';
 const CONFIG_PATH = '../blog_config.json';
 const blog = require(CONFIG_PATH);
 const fs = require('fs');
-var markdown = require('markdown-it')({ html: true });
 
 import { rssTemplate } from './templates/rss';
-import { htmlIndexTemplate } from './templates/html';
+import { htmlIndexTemplate, htmlPostTemplate } from './templates/html';
 
 checkType(blog, 'Blog');
 console.log('Blog config loaded and validated.');
@@ -28,18 +27,16 @@ const htmlIndexContent = buildIndexes(lastNPosts, blog, htmlIndexTemplate);
 createIndexFile('index.html', htmlIndexContent);
 console.log('Created HTML index file.');
 
-renderPostFiles(sourceFiles.reverse());
+renderPostFiles(sourceFiles.reverse(), blog, htmlPostTemplate);
 
 console.log('Finished!');
 
-function buildIndexes(files: any[], blog: Blog, template) {
+function buildIndexes(files: any[], blog: Blog, template: Template) {
     const items: Post[] = [];
     files.reverse().forEach( filename => {
-        const fileContents: any = utils.getPostData(filename);
-        const post: Post = JSON.parse(JSON.stringify(fileContents.data));
+        const post: Post = utils.getPostData(filename);
         checkType(post, 'Post');
         if (post.status === 'publish') {
-            post.content = markdown.render(JSON.parse(JSON.stringify(fileContents.content)));
             items.push(post);
         }
     });
@@ -58,7 +55,7 @@ function createIndexFile(filename, content) {
     fs.writeFileSync(`./html/${filename}`, content, { flag: 'w' });
 }
 
-function renderPostFiles(filenames: string[], predicate: Function = () => { return true; }) {
+function renderPostFiles(filenames: string[], blog: Blog, template: Template, predicate: Function = () => { return true; }) {
 
     let cachedPost: Post;
 
@@ -67,13 +64,13 @@ function renderPostFiles(filenames: string[], predicate: Function = () => { retu
         if (cachedPost && cachedPost.filename === filename) {
             postData = cachedPost;
         } else {
-            postData = getPost(filename);
+            postData = utils.getPostData(filename);
         }
 
         if (postData.status === "publish" && predicate(postData)) {
 
             if (filenames[index + 1]) {
-                const nextPostData = getPost(filenames[index + 1]);
+                const nextPostData = utils.getPostData(filenames[index + 1]);
                 const nextLink: Link = {
                     url: nextPostData.guid,
                     title: nextPostData.title,
@@ -92,19 +89,13 @@ function renderPostFiles(filenames: string[], predicate: Function = () => { retu
             }
         }
 
+        const content = template(postData, blog);
+
         const filePath = `./html${postData.guid}`;
         if (!fs.existsSync(filePath)){
             fs.mkdirSync(filePath, { recursive : true });
         }
-        fs.writeFileSync(`${filePath}index.html`, postData.content, { flag: 'w' });
+        fs.writeFileSync(`${filePath}index.html`, content, { flag: 'w' });
 
     });
-}
-
-function getPost(filename): Post  {
-    const fileContents: any = utils.getPostData(filename);
-    const post: Post = JSON.parse(JSON.stringify(fileContents.data));
-    checkType(post, 'Post');
-    post.content = markdown.render(JSON.parse(JSON.stringify(fileContents.content)));
-    return post;
 }
