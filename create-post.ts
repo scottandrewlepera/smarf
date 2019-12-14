@@ -1,34 +1,43 @@
 import { checkType } from './src/checkType';
 import { Post, Blog } from './src/types';
+import { die } from './src/utils';
 const blog: Blog = require('../blog-config.json');
 const minimist = require('minimist');
 const df = require('user-friendly-date-formatter');
 const fs = require('fs');
-
-const POST_FILENAME_DATE_FORMAT = '%YYYY-%MM-%DD_%H-%m-%s-%l';
-const POST_DATE_FORMAT = '%YYYY-%MM-%DD %H:%m:%s';
 
 checkType(blog, 'Blog');
 console.log('Blog config loaded and validated.');
 
 let args = minimist(process.argv.slice(2), {
     string: [
-        'title',
-        't'
+        'title', 't', 'date', 'd'
     ],
 });
 
 const title = args.title || args.t;
+const dateArg = args.date || args.d;
 
 if (!title) {
-    throw Error('No title parameter supplied');
+    die('No title parameter supplied.');
 }
 
-createEmptyPost(title);
+let date;
+if (dateArg) {
+    try {
+        date = new Date(dateArg);
+    } catch (err) {
+        die(`Can't create date. ${dateArg}`);
+    }
+} else {
+    date = new Date();
+}
+
+createEmptyPost(title, date);
 
 /* functions */
 
-function createEmptyPost(title: string) {
+function createEmptyPost(title: string, date: Date) {
 
     if (!fs.existsSync('./posts')){
         fs.mkdirSync('./posts');
@@ -36,7 +45,9 @@ function createEmptyPost(title: string) {
 
     const titleSlug = createTitleSlug(title);
 
-    const date = new Date();
+    const POST_FILENAME_DATE_FORMAT = '%YYYY-%MM-%DD_%H-%m-%s-%l';
+    const POST_DATE_FORMAT = '%YYYY-%MM-%DD %H:%m:%s';
+
     const postDate = df(date, POST_DATE_FORMAT);
     const formattedDate = df(date, POST_FILENAME_DATE_FORMAT);
     const postLink = createFormattedArchivePath(blog, titleSlug, date);
@@ -98,5 +109,5 @@ ${post.content || 'Write a blog post here'}
 }
 
 function createPostFile(filename, content) {
-    fs.writeFileSync(`./posts/${filename}`, content, { flag: 'w' });
+    fs.writeFileSync(`./posts/${filename}`, content, { flag: 'wx' });
 }
