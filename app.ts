@@ -1,7 +1,7 @@
 import { checkType } from './src/checkType';
-import { Post, Blog, Link, Template } from './types/index';
+import { Post, Blog, Link, Template } from './src/types';
 import * as utils from './src/utils';
-const CONFIG_PATH = '../blog_config.json';
+const CONFIG_PATH = '../blog-config.json';
 const blog = require(CONFIG_PATH);
 const fs = require('fs');
 
@@ -15,28 +15,28 @@ console.log('Indexing source files...')
 const sourceFiles: any[] = fs.readdirSync('./posts');
 console.log(`Processing ${sourceFiles.length} post files.`);
 
-const sliceAt = (sourceFiles.length > blog.index_posts) ?
-                sourceFiles.length - blog.index_posts : sourceFiles.length;
-
-const lastNPosts = sourceFiles.reverse().slice(sliceAt);
+const lastNPosts = (sourceFiles.length > blog.index_posts) ?
+                        sourceFiles.reverse().slice(0, blog.index_posts) :
+                        sourceFiles.reverse();
 
 console.log('Building indexes...');
 
-const feedContent = buildIndexes(sourceFiles.reverse(), blog, rssTemplate);
+const feedContent = buildIndexes(lastNPosts, blog, rssTemplate);
 createIndexFile('feed.xml', feedContent);
 console.log('Created RSS feed XML file.');
 
-const htmlIndexContent = buildIndexes(sourceFiles.reverse(), blog, htmlIndexTemplate);
+const htmlIndexContent = buildIndexes(lastNPosts, blog, htmlIndexTemplate);
 createIndexFile('index.html', htmlIndexContent);
 console.log('Created HTML index file.');
 
+console.log('Building individual posts...');
 renderPostFiles(sourceFiles.reverse(), blog, htmlPostTemplate);
 
 console.log('Finished!');
 
 function buildIndexes(files: any[], blog: Blog, template: Template) {
     const items: Post[] = [];
-    files.reverse().forEach( filename => {
+    files.forEach( filename => {
         const post: Post = utils.getPostData(filename);
         checkType(post, 'Post');
         if (post.status === 'publish') {
@@ -61,6 +61,7 @@ function createIndexFile(filename, content) {
 function renderPostFiles(filenames: string[], blog: Blog, template: Template, predicate: Function = () => { return true; }) {
 
     let cachedPost: Post;
+    let postCounter = 0;
 
     filenames.forEach( (filename, index) => {
         let postData: Post;
@@ -100,5 +101,9 @@ function renderPostFiles(filenames: string[], blog: Blog, template: Template, pr
         }
         fs.writeFileSync(`${filePath}index.html`, content, { flag: 'w' });
 
+        postCounter++;
+
     });
+
+    console.log(`Built ${postCounter} individual posts.`);
 }

@@ -1,40 +1,42 @@
-import { Blog, Post, Template } from '../types';
+import { Blog, Post, Template } from '../src/types';
+const df = require('user-friendly-date-formatter');
+
+function getDisplayDate(dateTime: string) {
+    return df(new Date(dateTime), '%D %fM %YYYY');
+}
 
 export const htmlIndexTemplate: Template = (posts: Post[], blog: Blog): string => {
-    const headerHTML = htmlHeaderTemplate(blog);
-    const footerHTML = htmlFooterTemplate(blog);
     let html = '';
     posts.forEach( post => {
         html += `<article>
         <h1><a href="${post.guid}">${post.title}</a></h1>
+        <time datetime="${post.date}">${ getDisplayDate(post.date) }</time>
         ${post.content}
         </article>
         `;
     });
 
-    return `${headerHTML}
+    return `${ htmlHeader(blog) }
     ${html}
-    ${footerHTML}`;
+    ${ htmlFooter(blog) }
+    `;
 }
 
 export const htmlPostTemplate: Template = (post: Post, blog: Blog): string => {
-    const headerHTML = htmlHeaderTemplate(blog, post);
-    const footerHTML = htmlFooterTemplate(blog);
-    let html = `<article>
+    return `${ htmlHeader(blog, post) }
+        <article>
         <h1><a href="${post.guid}">${post.title}</a></h1>
+        <time datetime="${post.date}">${ getDisplayDate(post.date) }</time>
         ${post.content}
         <hr />
         ${ post.previous_link ? `<p>Previously: <a href="${post.previous_link.url}">${post.previous_link.text}</a></p>` : ''}
         ${ post.next_link ? `<p>Next: <a href="${post.next_link.url}">${post.next_link.text}</a></p>` : ''}
         </article>
+        ${ htmlFooter(blog) }
         `;
-
-    return `${headerHTML}
-    ${html}
-    ${footerHTML}`;
 }
 
-export const htmlFooterTemplate = (blog: Blog): string => {
+export const htmlFooter = (blog: Blog): string => {
     return `</main>
     <footer>
         <a href="${blog.url}" title="${blog.title}">${blog.title}</a> | <a href="#">Top</a>
@@ -43,7 +45,7 @@ export const htmlFooterTemplate = (blog: Blog): string => {
 </html>`;
 }
 
-export const htmlHeaderTemplate = (blog: Blog, post?: Post): string => {
+export const htmlHeader = (blog: Blog, post?: Post): string => {
     let title = blog.title;
     if (post) {
         title += ` | ${post.title}`;
@@ -69,12 +71,12 @@ export const htmlHeaderTemplate = (blog: Blog, post?: Post): string => {
                 margin-bottom: 6em;
             }
     
-            p, ul {
+            p, ul, ol {
                 line-height: 1.8rem;
             }
     
             time {
-                color: #ccc;
+                color: #aaaaaa;
             }
     
             pre {
@@ -83,7 +85,7 @@ export const htmlHeaderTemplate = (blog: Blog, post?: Post): string => {
                 white-space: pre-wrap;
             }
     
-            p > code {
+            *:not(pre) > code {
                 background-color: #ffe5e9;
                 font-weight: bold;
                 padding: 4px;

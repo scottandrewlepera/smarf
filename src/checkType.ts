@@ -1,4 +1,4 @@
-import exportedTypeSuite from '../types/index-ti';
+import exportedTypeSuite from './types/index-ti';
 import { createCheckers } from "ts-interface-checker";
 
 const TypeChecker = createCheckers(exportedTypeSuite);

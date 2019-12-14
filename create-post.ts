@@ -1,28 +1,30 @@
 import { checkType } from './src/checkType';
-import { Post, Blog, Link } from './types/';
-const CONFIG_PATH = '../blog_config.json';
-const blog: Blog = require(CONFIG_PATH);
+import { Post, Blog } from './src/types';
+const blog: Blog = require('../blog-config.json');
 const minimist = require('minimist');
-const format = require('date-format');
+const df = require('user-friendly-date-formatter');
 const fs = require('fs');
 
-const POST_FILENAME_DATE_FORMAT = 'yyyy-MM-dd_hh-mm-ss-SSS';
-const POST_DATE_FORMAT = 'yyyy-MM-dd hh:mm:ss';
+const POST_FILENAME_DATE_FORMAT = '%YYYY-%MM-%DD_%H-%m-%s-%l';
+const POST_DATE_FORMAT = '%YYYY-%MM-%DD %H:%m:%s';
 
 checkType(blog, 'Blog');
 console.log('Blog config loaded and validated.');
 
-let argv = minimist(process.argv.slice(2), {
+let args = minimist(process.argv.slice(2), {
     string: [
-        'title'
+        'title',
+        't'
     ],
 });
 
-if (!argv.title) {
+const title = args.title || args.t;
+
+if (!title) {
     throw Error('No title parameter supplied');
 }
 
-createEmptyPost(argv.title);
+createEmptyPost(title);
 
 /* functions */
 
@@ -35,13 +37,11 @@ function createEmptyPost(title: string) {
     const titleSlug = createTitleSlug(title);
 
     const date = new Date();
-    const postDate = format.asString(POST_DATE_FORMAT, date);
-    const formattedDate = format.asString(POST_FILENAME_DATE_FORMAT, date);
+    const postDate = df(date, POST_DATE_FORMAT);
+    const formattedDate = df(date, POST_FILENAME_DATE_FORMAT);
     const postLink = createFormattedArchivePath(blog, titleSlug, date);
 
     const filename = `${formattedDate}_${titleSlug}.md`;
-
-    const linkFileNames = getPreviousNextFileNames(filename);
 
     const post: Post = {
         title: title,
@@ -58,16 +58,20 @@ function createEmptyPost(title: string) {
 }
 
 function createTitleSlug(title: string): string {
-    return title.replace(/\s/gi, '_')
+    let slug =  title.replace(/\s/gi, '_')
         .replace(/[^a-z0-9_]/gi, '')
         .toLowerCase();
+
+    if (slug.length > 100) {
+        slug = slug.slice(0, 100);
+    }
+    return slug;
 }
 
 function createFormattedArchivePath(blog: Blog, titleSlug: string, date: Date): string {
     const formattedArchivePath = 
-        (blog.archive_format === 'YearMonthDay') ? 'yyyy/MM/dd' : 'yyyy/MM';
-    const dateFragment = 
-        format.asString(formattedArchivePath, date);
+        (blog.archive_format === 'YearMonthDay') ? '%YYYY/%MM/%DD' : '%YYYY/%MM';
+    const dateFragment = df(date, formattedArchivePath);
     return `/${blog.root}/${dateFragment}/${titleSlug}/`;
 }
 
@@ -95,14 +99,4 @@ ${post.content || 'Write a blog post here'}
 
 function createPostFile(filename, content) {
     fs.writeFileSync(`./posts/${filename}`, content, { flag: 'w' });
-}
-
-function getPreviousNextFileNames(filename: string): any {
-    const dir = fs.readdirSync('./posts');
-    dir.push(filename);
-    dir.sort();
-    const indexes: any = {};
-    indexes.previous = dir[dir.indexOf(filename) - 1];
-    indexes.next = dir[dir.indexOf(filename) + 1];
-    return indexes;
 }

@@ -2,21 +2,22 @@
   "name": "smarf",
   "version": "1.0.0",
   "description": "A static weblog generator",
-  "main": "index.ts",
+  "main": "app.ts",
   "scripts": {
-    "build": "npm run clean; npm run gen-types; tsc --outDir build index.ts create-post.ts; node ./build/index.js",
-    "gen-types": "`npm bin`/ts-interface-builder types/index.ts",
-    "clean": "rm -rf build html/*"
+    "build": "npm run clean; npm run gen-types; tsc --outDir build app.ts create-post.ts; node ./build/app.js",
+    "gen-types": "`npm bin`/ts-interface-builder src/types/index.ts",
+    "clean": "rm -rf build html"
   },
   "author": "scottandrew",
   "license": "ISC",
   "dependencies": {
     "@types/node": "^12.12.14",
-    "date-format": "^3.0.0",
     "frontmatter": "0.0.3",
     "markdown-it": "^10.0.0",
     "minimist": "^1.2.0",
-    "ts-interface-checker": "^0.1.9"
+    "ts-interface-checker": "^0.1.9",
+    "user-friendly-date-formatter": "^2.0.0",
+    "utility-types": "^3.10.0"
   },
   "devDependencies": {
     "ts-interface-builder": "^0.2.1"

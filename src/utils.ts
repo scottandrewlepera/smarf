@@ -1,7 +1,7 @@
 const frontmatter = require('frontmatter');
 const fs = require('fs');
 var markdown = require('markdown-it')({ html: true });
-import { Post } from '../types/index';
+import { Post } from './types';
 import { checkType } from './checkType';
 
 export function getPostData(filename: string): Post {
