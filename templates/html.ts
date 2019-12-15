@@ -1,4 +1,5 @@
 import { Blog, Post, Template } from '../src/types';
+import { sanitizeHTML } from '../src/';
 const df = require('user-friendly-date-formatter');
 
 function getDisplayDate(dateTime: string) {
@@ -8,54 +9,58 @@ function getDisplayDate(dateTime: string) {
 export const htmlIndexTemplate: Template = (posts: Post[], blog: Blog): string => {
     let html = '';
     posts.forEach( post => {
+        const title = sanitizeHTML(post.title);
         html += `<article>
-        <h1><a href="${post.guid}">${post.title}</a></h1>
-        <time datetime="${post.date}">${ getDisplayDate(post.date) }</time>
-        ${post.content}
+        <h1><a href="${ post.guid }" title="${ title }">${ title }</a></h1>
+        <time datetime="${ post.date }">${ getDisplayDate(post.date) }</time>
+        ${ post.content }
         </article>
         `;
     });
 
     return `${ htmlHeader(blog) }
-    ${html}
+    ${ html }
     ${ htmlFooter(blog) }
     `;
 }
 
 export const htmlPostTemplate: Template = (post: Post, blog: Blog): string => {
+    const title = sanitizeHTML(post.title);
     return `${ htmlHeader(blog, post) }
         <article>
-        <h1><a href="${post.guid}">${post.title}</a></h1>
-        <time datetime="${post.date}">${ getDisplayDate(post.date) }</time>
-        ${post.content}
+        <h1><a href="${ post.guid }">${ title }</a></h1>
+        <time datetime="${ post.date }">${ getDisplayDate(post.date) }</time>
+        ${ post.content }
         <hr />
-        ${ post.previous_link ? `<p>Previously: <a href="${post.previous_link.url}">${post.previous_link.text}</a></p>` : ''}
-        ${ post.next_link ? `<p>Next: <a href="${post.next_link.url}">${post.next_link.text}</a></p>` : ''}
+        ${ post.previous_link ? `<p>Previously: <a href="${ post.previous_link.url }">${ sanitizeHTML(post.previous_link.text) }</a></p>` : ''}
+        ${ post.next_link ? `<p>Next: <a href="${ post.next_link.url }">${ sanitizeHTML(post.next_link.text) }</a></p>` : ''}
         </article>
         ${ htmlFooter(blog) }
         `;
 }
 
 export const htmlFooter = (blog: Blog): string => {
+    const title = sanitizeHTML(blog.title);
     return `</main>
     <footer>
-        <a href="${blog.url}" title="${blog.title}">${blog.title}</a> | <a href="#">Top</a>
+        <a href="${ blog.url }" title="${ title }">${ title }</a> | <a href="#">Top</a>
     </footer>
 </body>
 </html>`;
 }
 
 export const htmlHeader = (blog: Blog, post?: Post): string => {
-    let title = blog.title;
+    let blogTitle = sanitizeHTML(blog.title);
+    let pageTitle = blogTitle;
     if (post) {
-        title += ` | ${post.title}`;
+        pageTitle += ` | ${ sanitizeHTML(post.title) }`;
     }
     return  `<!DOCTYPE html>
     <html lang="en-US">
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta charset="utf-8">
-        <title>${title}</title>
+        <title>${ pageTitle }</title>
         <style>
             html {
                 font-size: 18px;
@@ -96,7 +101,8 @@ export const htmlHeader = (blog: Blog, post?: Post): string => {
     <body>
         <header>
             <nav>
-                <a href="${blog.url}" title="${blog.title}">${blog.title}</a>
+                <a href="${ blog.url }"
+                    title="${ blogTitle }">${ blogTitle }</a>
             </nav>
         </header>
         <main>
