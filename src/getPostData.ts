@@ -12,8 +12,3 @@ export function getPostData(filename: string): Post {
     post.content = markdown.render(JSON.parse(JSON.stringify(parsedContents.content)));
     return post;
 }
-
-export function die(message) {
-    console.error(`ERROR: ${message}`);
-    process.exit();
-}

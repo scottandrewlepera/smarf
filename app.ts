@@ -1,8 +1,8 @@
 import { checkType } from './src/checkType';
 import { Post, Blog, Link, Template } from './src/types';
-import * as utils from './src/utils';
-const CONFIG_PATH = '../blog-config.json';
-const blog = require(CONFIG_PATH);
+import { getPostData } from './src';
+
+const blog = require('../blog-config.json');
 const fs = require('fs');
 
 import { rssTemplate } from './templates/rss';
@@ -37,7 +37,7 @@ console.log('Finished!');
 function buildIndexes(files: any[], blog: Blog, template: Template) {
     const items: Post[] = [];
     files.forEach( filename => {
-        const post: Post = utils.getPostData(filename);
+        const post: Post = getPostData(filename);
         checkType(post, 'Post');
         if (post.status === 'publish') {
             items.push(post);
@@ -68,13 +68,13 @@ function renderPostFiles(filenames: string[], blog: Blog, template: Template, pr
         if (cachedPost && cachedPost.filename === filename) {
             postData = cachedPost;
         } else {
-            postData = utils.getPostData(filename);
+            postData = getPostData(filename);
         }
 
         if (postData.status === "publish" && predicate(postData)) {
 
             if (filenames[index + 1]) {
-                const nextPostData = utils.getPostData(filenames[index + 1]);
+                const nextPostData = getPostData(filenames[index + 1]);
                 const nextLink: Link = {
                     url: nextPostData.guid,
                     title: nextPostData.title,
