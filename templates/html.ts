@@ -15,11 +15,13 @@ export const htmlIndexTemplate: Template = (posts: Post[], blog: Blog): string =
         <time datetime="${ post.date }">${ getDisplayDate(post.date) }</time>
         ${ post.content }
         </article>
+        <hr />
         `;
     });
 
     return `${ htmlHeader(blog) }
     ${ html }
+    <p><a href="/archive/">Post archive</a></p>
     ${ htmlFooter(blog) }
     `;
 }
@@ -90,8 +92,8 @@ export const htmlHeader = (blog: Blog, post?: Post): string => {
                 margin: auto;
             }
     
-            article {
-                margin-bottom: 6em;
+            hr {
+                margin: 3em 0;
             }
     
             p, ul, ol {
