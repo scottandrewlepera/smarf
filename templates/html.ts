@@ -39,6 +39,24 @@ export const htmlPostTemplate: Template = (post: Post, blog: Blog): string => {
         `;
 }
 
+export const htmlArchiveIndexTemplate: Template = (posts: Post[], blog: Blog): string => {
+    let html = '';
+    posts.forEach( post => {
+        const title = sanitizeHTML(post.title);
+        html += `<li><a href="${ post.guid }" title="${ title }">${ title }</a> <time datetime="${ post.date }">${ getDisplayDate(post.date) }</time></li>`;
+    });
+
+    return `${ htmlHeader(blog) }
+    <article>
+    <h1>Archives</h1>
+    <p>
+    <ul>${ html }</ul>
+    </p>
+    </article>
+    ${ htmlFooter(blog) }
+    `;
+}
+
 export const htmlFooter = (blog: Blog): string => {
     const title = sanitizeHTML(blog.title);
     return `</main>

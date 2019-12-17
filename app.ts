@@ -6,7 +6,7 @@ const blog = require('../blog-config.json');
 const fs = require('fs');
 
 import { rssTemplate } from './templates/rss';
-import { htmlIndexTemplate, htmlPostTemplate } from './templates/html';
+import { htmlIndexTemplate, htmlPostTemplate, htmlArchiveIndexTemplate } from './templates/html';
 
 checkType(blog, 'Blog');
 console.log('Blog config loaded and validated.');
@@ -32,6 +32,9 @@ console.log('Created HTML index file.');
 console.log('Building individual posts...');
 renderPostFiles(sourceFiles.reverse(), blog, htmlPostTemplate);
 
+const htmlIndexArchiveContent = buildIndexes(sourceFiles.reverse(), blog, htmlArchiveIndexTemplate);
+createIndexFile('./archive/index.html', htmlIndexArchiveContent);
+console.log('Created archive HTML index file.');
 console.log('Finished!');
 
 function buildIndexes(files: any[], blog: Blog, template: Template) {

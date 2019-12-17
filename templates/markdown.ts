@@ -4,8 +4,8 @@ export function markdownPostTemplate(post: Post): string {
 
 return `---
 title: "${post.title}"
-date: ${post.date}
-filename: ${post.filename}
+date: "${post.date}"
+filename: "${post.filename}"
 status: ${post.status}
 author_uid: ${post.author_uid}
 slug: ${post.slug}
