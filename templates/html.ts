@@ -1,5 +1,5 @@
 import { Blog, Post, Template } from '../src/types';
-import { sanitizeHTML } from '../src/';
+import { sanitize } from '../src/';
 const df = require('user-friendly-date-formatter');
 
 function getDisplayDate(dateTime: string) {
@@ -9,7 +9,7 @@ function getDisplayDate(dateTime: string) {
 export const htmlIndexTemplate: Template = (posts: Post[], blog: Blog): string => {
     let html = '';
     posts.forEach( post => {
-        const title = sanitizeHTML(post.title);
+        const title = sanitize(post.title);
         html += `<article>
         <h1><a href="${ post.guid }" title="${ title }">${ title }</a></h1>
         <time datetime="${ post.date }">${ getDisplayDate(post.date) }</time>
@@ -27,15 +27,15 @@ export const htmlIndexTemplate: Template = (posts: Post[], blog: Blog): string =
 }
 
 export const htmlPostTemplate: Template = (post: Post, blog: Blog): string => {
-    const title = sanitizeHTML(post.title);
+    const title = sanitize(post.title);
     return `${ htmlHeader(blog, post) }
         <article>
         <h1><a href="${ post.guid }">${ title }</a></h1>
         <time datetime="${ post.date }">${ getDisplayDate(post.date) }</time>
         ${ post.content }
         <hr />
-        ${ post.previous_link ? `<p>Previously: <a href="${ post.previous_link.url }">${ sanitizeHTML(post.previous_link.text) }</a></p>` : ''}
-        ${ post.next_link ? `<p>Next: <a href="${ post.next_link.url }">${ sanitizeHTML(post.next_link.text) }</a></p>` : ''}
+        ${ post.previous_link ? `<p>Previously: <a href="${ post.previous_link.url }">${ sanitize(post.previous_link.text) }</a></p>` : ''}
+        ${ post.next_link ? `<p>Next: <a href="${ post.next_link.url }">${ sanitize(post.next_link.text) }</a></p>` : ''}
         </article>
         ${ htmlFooter(blog) }
         `;
@@ -44,7 +44,7 @@ export const htmlPostTemplate: Template = (post: Post, blog: Blog): string => {
 export const htmlArchiveIndexTemplate: Template = (posts: Post[], blog: Blog): string => {
     let html = '';
     posts.forEach( post => {
-        const title = sanitizeHTML(post.title);
+        const title = sanitize(post.title);
         html += `<li><a href="${ post.guid }" title="${ title }">${ title }</a> <time datetime="${ post.date }">${ getDisplayDate(post.date) }</time></li>`;
     });
 
@@ -60,7 +60,7 @@ export const htmlArchiveIndexTemplate: Template = (posts: Post[], blog: Blog): s
 }
 
 export const htmlFooter = (blog: Blog): string => {
-    const title = sanitizeHTML(blog.title);
+    const title = sanitize(blog.title);
     return `</main>
     <footer>
         <a href="${ blog.url }" title="${ title }">${ title }</a> | <a href="#">Top</a>
@@ -70,10 +70,10 @@ export const htmlFooter = (blog: Blog): string => {
 }
 
 export const htmlHeader = (blog: Blog, post?: Post): string => {
-    let blogTitle = sanitizeHTML(blog.title);
+    let blogTitle = sanitize(blog.title);
     let pageTitle = blogTitle;
     if (post) {
-        pageTitle += ` | ${ sanitizeHTML(post.title) }`;
+        pageTitle += ` | ${ sanitize(post.title) }`;
     }
     return  `<!DOCTYPE html>
     <html lang="en-US">
@@ -83,7 +83,7 @@ export const htmlHeader = (blog: Blog, post?: Post): string => {
         <title>${ pageTitle }</title>
         <style>
             html {
-                font-size: 18px;
+                font-size: 22px;
                 font-family: sans-serif;
             }
     
