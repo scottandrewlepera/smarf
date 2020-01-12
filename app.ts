@@ -16,11 +16,10 @@ import {
 checkType(blog, 'Blog');
 console.log('Blog config loaded and validated.');
 
-const files = getSourceFileList();
+const files = getSourceFileList().reverse();
 
 const indexPosts = (files.length > blog.index_posts) ?
-    files.reverse().slice(0, blog.index_posts) :
-    files.reverse();
+    files.slice(0, blog.index_posts) : files;
 
 console.log('Building indexes...');
 
@@ -33,9 +32,9 @@ createIndexFile('index.html', htmlIndexContent);
 console.log('Created HTML index file.');
 
 console.log('Building individual posts...');
-renderPostFiles(files.reverse(), blog, htmlPostTemplate);
+renderPostFiles(files, blog, htmlPostTemplate);
 
-const htmlIndexArchiveContent = buildIndexes(files.reverse(), blog, htmlArchiveIndexTemplate);
+const htmlIndexArchiveContent = buildIndexes(files, blog, htmlArchiveIndexTemplate);
 createIndexFile('./archive/index.html', htmlIndexArchiveContent);
 console.log('Created archive HTML index file.');
 console.log('Finished!');

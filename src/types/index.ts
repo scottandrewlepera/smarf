@@ -50,5 +50,5 @@ export type Post = {
     status: PostStatus;
 }
 
-export type Template = (posts: Post | Post[], blog: Blog) => string;
+export type Template = (posts: Post | Post[], blog?: Blog) => string;
 
