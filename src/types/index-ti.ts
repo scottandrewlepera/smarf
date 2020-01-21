@@ -48,7 +48,7 @@ export const Post = t.iface([], {
   "content": t.opt(t.union("string", "null")),
   "excerpt": t.opt(t.union("string", "null")),
   "slug": t.opt(t.union("string", "null")),
-  "tags": t.opt(t.union(t.array("Tag"), "null")),
+  "tags": t.opt(t.union("string", "null")),
   "thumbnail_image": t.opt(t.union("string", "null")),
   "opengraph_image": t.opt(t.union("string", "null")),
   "previous_link": t.opt(t.union("Link", "null")),
@@ -56,7 +56,7 @@ export const Post = t.iface([], {
   "status": "PostStatus",
 });
 
-export const Template = t.func("string", t.param("posts", t.union("Post", t.array("Post"))), t.param("blog", "Blog", true));
+export const Template = t.func("string", t.param("posts", t.union("Post", t.array("Post"))), t.param("blog", "Blog", true), t.param("data", "any", true));
 
 const exportedTypeSuite: t.ITypeSuite = {
   Link,

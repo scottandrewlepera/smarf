@@ -1,5 +1,5 @@
 import { Blog, Post, Template } from '../src/types';
-import { sanitize } from '../src/';
+import { sanitize, slugify } from '../src/';
 const df = require('user-friendly-date-formatter');
 
 function getDisplayDate(dateTime: string) {
@@ -21,7 +21,7 @@ export const htmlIndexTemplate: Template = (posts: Post[], blog: Blog): string =
 
     return `${ htmlHeader(blog) }
     ${ html }
-    <p><a href="/archive/">Post archive</a></p>
+    <p><a href="/${blog.root}/">All posts</a></p>
     ${ htmlFooter(blog) }
     `;
 }
@@ -34,6 +34,7 @@ export const htmlPostTemplate: Template = (post: Post, blog: Blog): string => {
         <time datetime="${ post.date }">${ getDisplayDate(post.date) }</time>
         ${ post.content }
         <hr />
+        <p>Posted in: ${tagsTemplate(post.tags)}</p>
         ${ post.previous_link ? `<p>Previously: <a href="${ post.previous_link.url }">${ sanitize(post.previous_link.text) }</a></p>` : ''}
         ${ post.next_link ? `<p>Next: <a href="${ post.next_link.url }">${ sanitize(post.next_link.text) }</a></p>` : ''}
         </article>
@@ -81,41 +82,7 @@ export const htmlHeader = (blog: Blog, post?: Post): string => {
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta charset="utf-8">
         <title>${ pageTitle }</title>
-        <style>
-            html {
-                font-size: 22px;
-                font-family: sans-serif;
-            }
-    
-            header, footer, main {
-                max-width: 960px;
-                margin: auto;
-            }
-    
-            hr {
-                margin: 3em 0;
-            }
-    
-            p, ul, ol {
-                line-height: 1.8rem;
-            }
-    
-            time {
-                color: #aaaaaa;
-            }
-    
-            pre {
-                background: #eee;
-                padding: 1rem;
-                white-space: pre-wrap;
-            }
-    
-            *:not(pre) > code {
-                background-color: #ffe5e9;
-                font-weight: bold;
-                padding: 4px;
-            }
-        </style>
+        <link href="/css/scottandrew.css" type="text/css" rel="stylesheet" />
     </head>
     
     <body>
@@ -127,4 +94,13 @@ export const htmlHeader = (blog: Blog, post?: Post): string => {
         </header>
         <main>
 `;
+}
+
+const tagsTemplate = (tags: string) => {
+    let html = [];
+    tags.split(' ').forEach(tag => {
+        const safeTag = slugify(tag);
+        html.push(`<a href="/tag/${safeTag}/">${safeTag}</a>`);
+    });
+    return html.join(', ');
 }

@@ -42,7 +42,7 @@ export type Post = {
     content?: string | null;
     excerpt?: string | null;
     slug?: string | null;
-    tags?: Tag[] | null;
+    tags?: string | null;
     thumbnail_image?: string | null;
     opengraph_image?: string | null;
     previous_link?: Link | null;
@@ -50,5 +50,5 @@ export type Post = {
     status: PostStatus;
 }
 
-export type Template = (posts: Post | Post[], blog?: Blog) => string;
+export type Template = (posts: Post | Post[], blog?: Blog, data?: any) => string;
 

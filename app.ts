@@ -1,6 +1,6 @@
 import { checkType } from './src/checkType';
 import { Post, Blog, Link, Template } from './src/types';
-import { getPostData } from './src';
+import { getPostData, slugify } from './src';
 
 const blog = require('../blog-config.json');
 const fs = require('fs');
@@ -15,6 +15,8 @@ import {
 
 checkType(blog, 'Blog');
 console.log('Blog config loaded and validated.');
+
+let allTags: string[];
 
 const files = getSourceFileList().reverse();
 
@@ -35,8 +37,20 @@ console.log('Building individual posts...');
 renderPostFiles(files, blog, htmlPostTemplate);
 
 const htmlIndexArchiveContent = buildIndexes(files, blog, htmlArchiveIndexTemplate);
-createIndexFile('./archive/index.html', htmlIndexArchiveContent);
+createIndexFile(`${blog.root}/index.html`, htmlIndexArchiveContent);
 console.log('Created archive HTML index file.');
+
+console.log(`Creating tag archives for ${allTags.length} tags...`);
+allTags.forEach(tag => {
+    const tagArchiveContent = buildIndexes(files, blog, htmlArchiveIndexTemplate, function(post: Post) { 
+        return post.tags.split(' ').includes(tag);
+    });
+    const safeTag = slugify(tag);
+    fs.mkdirSync(`./html/tag/${safeTag}`, { recursive: true });
+    createIndexFile(`tag/${safeTag}/index.html`, tagArchiveContent);
+    console.log(`- ${safeTag}`);
+});
+
 console.log('Finished!');
 
 function getSourceFileList() {
@@ -46,12 +60,12 @@ function getSourceFileList() {
     return files;
 }
 
-function buildIndexes(files: any[], blog: Blog, template: Template) {
+function buildIndexes(files: any[], blog: Blog, template: Template, predicate: Function = () => { return true; }) {
     const items: Post[] = [];
     files.forEach( filename => {
         const post: Post = getPostData(filename);
         checkType(post, 'Post');
-        if (post.status === 'publish') {
+        if (post.status === 'publish' && predicate(post)) {
             items.push(post);
         }
     });
@@ -74,6 +88,7 @@ function renderPostFiles(filenames: string[], blog: Blog, template: Template, pr
 
     let cachedPost: Post;
     let postCounter = 0;
+    let tags: string[] = [];
 
     filenames.forEach( (filename, index) => {
         let postData: Post;
@@ -86,22 +101,22 @@ function renderPostFiles(filenames: string[], blog: Blog, template: Template, pr
         if (postData.status === "publish" && predicate(postData)) {
 
             if (filenames[index + 1]) {
-                const nextPostData = getPostData(filenames[index + 1]);
-                const nextLink: Link = {
-                    url: nextPostData.guid,
-                    title: nextPostData.title,
-                    text: nextPostData.title
-                }
-                postData.next_link = nextLink;
-
+                const prevPostData = getPostData(filenames[index + 1]);
                 const prevLink: Link = {
+                    url: prevPostData.guid,
+                    title: prevPostData.title,
+                    text: prevPostData.title
+                }
+                postData.previous_link = prevLink;
+
+                const nextLink: Link = {
                     url: postData.guid,
                     title: postData.title,
                     text: postData.title
                 }
-                nextPostData.previous_link = prevLink;
+                prevPostData.next_link = nextLink;
 
-                cachedPost = nextPostData;
+                cachedPost = prevPostData;
             }
         }
 
@@ -113,9 +128,12 @@ function renderPostFiles(filenames: string[], blog: Blog, template: Template, pr
         }
         fs.writeFileSync(`${filePath}index.html`, content, { flag: 'w' });
 
+        tags = tags.concat(postData.tags.split(' '));
         postCounter++;
 
     });
+
+    allTags = Array.from(new Set(tags)).sort();
 
     console.log(`Built ${postCounter} individual posts.`);
 }

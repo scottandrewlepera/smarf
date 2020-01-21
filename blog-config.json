@@ -1,7 +1,7 @@
 {
     "title": "Scott Andrew",
-    "url": "https://scottandrew.com",
-    "root": "archive",
+    "url": "http://scottandrew.com",
+    "root": "posts",
     "description": "Scott Andrew makes stuff for the web, draws comics, and plays in bands. He thinks you're pretty cool.",
     "language": "en-US",
     "archive_format": "YearMonthDay",
