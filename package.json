@@ -4,9 +4,10 @@
   "description": "A static weblog generator",
   "main": "app.ts",
   "scripts": {
-    "build": "npm run clean; npm run gen-types; tsc --outDir build app.ts create-post.ts; node ./build/app.js",
+    "build": "npm run clean; npm run copy-static; npm run gen-types; tsc --outDir build app.ts create-post.ts; node ./build/app.js",
     "gen-types": "`npm bin`/ts-interface-builder src/types/index.ts",
-    "clean": "rm -rf build html"
+    "clean": "rm -rf build html",
+    "copy-static": "mkdir html; cp -r assets/* html"
   },
   "author": "scottandrew",
   "license": "ISC",

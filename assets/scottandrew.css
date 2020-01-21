@@ -1,0 +1,33 @@
+html {
+    font-size: 22px;
+    font-family: sans-serif;
+}
+
+header, footer, main {
+    max-width: 960px;
+    margin: auto;
+}
+
+hr {
+    margin: 3em 0;
+}
+
+p, ul, ol {
+    line-height: 1.8rem;
+}
+
+time {
+    color: #aaa;
+}
+
+pre {
+    background: #eee;
+    padding: 1rem;
+    white-space: pre-wrap;
+}
+
+*:not(pre) > code {
+    background-color: #ffe5e9;
+    font-weight: bold;
+    padding: 4px;
+}
