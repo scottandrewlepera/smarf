@@ -1,11 +1,18 @@
 html {
-    font-size: 22px;
+    font-size: 18px;
     font-family: sans-serif;
 }
 
 header, footer, main {
     max-width: 960px;
     margin: auto;
+    padding: 1.6rem;
+    background-color: #fff;
+}
+
+body {
+    background-image: url("../img/coolgrid.gif");
+    margin: 0;
 }
 
 hr {
