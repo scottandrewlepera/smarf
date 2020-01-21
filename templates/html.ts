@@ -35,8 +35,10 @@ export const htmlPostTemplate: Template = (post: Post, blog: Blog): string => {
         ${ post.content }
         <hr />
         <p>Posted in: ${tagsTemplate(post.tags)}</p>
+        <div class="post-navigation">
         ${ post.previous_link ? `<p>Previously: <a href="${ post.previous_link.url }">${ sanitize(post.previous_link.text) }</a></p>` : ''}
         ${ post.next_link ? `<p>Next: <a href="${ post.next_link.url }">${ sanitize(post.next_link.text) }</a></p>` : ''}
+        </div>
         </article>
         ${ htmlFooter(blog) }
         `;
@@ -88,7 +90,7 @@ export const htmlHeader = (blog: Blog, post?: Post): string => {
     <body>
         <header>
             <nav>
-                <a href="${ blog.url }"
+                <a href="/"
                     title="${ blogTitle }">${ blogTitle }</a>
             </nav>
         </header>

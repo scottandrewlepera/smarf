@@ -38,3 +38,8 @@ pre {
     font-weight: bold;
     padding: 4px;
 }
+
+.post-navigation {
+    display: flex;
+    justify-content: space-between;
+}
