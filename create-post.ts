@@ -1,13 +1,12 @@
 import { checkType } from './src/checkType';
 import { Post, Blog } from './src/types';
-import { die } from './src';
+import { die, slugify } from './src';
 import { markdownPostTemplate } from './templates/markdown';
 
 const blog: Blog = require('../blog-config.json');
 const minimist = require('minimist');
 const df = require('user-friendly-date-formatter');
 const fs = require('fs');
-const util = require('util');
 
 checkType(blog, 'Blog');
 console.log('Blog config loaded and validated.');
@@ -41,7 +40,7 @@ createEmptyPost(title, date);
 
 function createEmptyPost(title: string, date: Date) {
 
-    const titleSlug = createTitleSlug(title);
+    const titleSlug = slugify(title);
     const postDate = df(date, '%YYYY-%MM-%DD %H:%m:%s');
     const filename = createFileName(titleSlug, date)
     const postLink = createArchivePath(blog, titleSlug, date);
@@ -58,13 +57,6 @@ function createEmptyPost(title: string, date: Date) {
 
     createPostFile(filename, post);
     console.log(`Created file for post: ${post.title}`);
-}
-
-function createTitleSlug(title: string): string {
-    return title.replace(/\s/gi, '_')
-                .replace(/[^a-z0-9_]/gi, '')
-                .toLowerCase()
-                .slice(0, 50);
 }
 
 function createFileName(titleSlug: string, date: Date): string {
