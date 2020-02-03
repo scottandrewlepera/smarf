@@ -6,30 +6,5 @@
     "language": "en-US",
     "archive_format": "YearMonthDay",
     "archive_with_slug": true,
-    "index_posts": 10,
-    "default_opengraph_image": "https://scottandrew.com/some_image.jpg",
-    "authors" : [
-        {
-            "name": "Scott Andrew",
-            "author_uid": "scottandrew",
-            "contact": "scottandrew@gmail.com",
-            "urls" : [
-                {
-                    "title": "Link to scottandrew.com",
-                    "text": "Website",
-                    "url": "https://scottandrew.com"
-                },
-                {
-                    "title": "Link to Twitter",
-                    "text": "Twitter",
-                    "url": "https://twitter.com/scottandrew"
-                },
-                {
-                    "title": "Link to Instagram",
-                    "text": "Instagram",
-                    "url": "https://twitter.com/scottandrew"
-                }
-            ]
-        }
-    ]
+    "index_posts": 10
 }
