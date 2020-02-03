@@ -84,7 +84,6 @@ export const htmlHeader = (blog: Blog, post?: Post): string => {
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta charset="utf-8">
         <title>${ pageTitle }</title>
-        <link href="/css/scottandrew.css" type="text/css" rel="stylesheet" />
     </head>
     
     <body>
