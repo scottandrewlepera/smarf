@@ -2,7 +2,7 @@
 
 Smarf is a simple static blog generator written to replace my Wordpress installation.
 
-<img src="smarf.jpg" width="350" />
+<a href="https://en.wikipedia.org/wiki/Too_Many_Cooks_(short)" target="_new"><img src="smarf.jpg" width="350" /></a>
 
 Smarf was written as an exercise to learn more about TypeScript and file I/O in Node. As such, it only supports the creation of posts, archives and an RSS feed. It is not very configurable and was written to suit my particular use case.
 
