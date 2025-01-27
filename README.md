@@ -1,12 +1,25 @@
-# What is Smarf?
+# Wait...Smarf?
 
 Smarf is a simple static blog generator written to replace my Wordpress installation.
 
-Smarf was written as an exercise to learn more about TypeScript and file I/O in Node. As such, it only supports the creation of posts, archives and an RSS feed. It is not very configurable and was written to suit my particular use case. Use at your own risk!
+<img src="smarf.jpg" width="350" />
+
+Smarf was written as an exercise to learn more about TypeScript and file I/O in Node. As such, it only supports the creation of posts, archives and an RSS feed. It is not very configurable and was written to suit my particular use case.
+
+## Unmaintained
+This code is unmaintained, naïve, and probably bad. Use at your own risk! Or learn from my mistakes.
+
+## Requirements and installation
+
+The following should be installed globally.
+
+- Node 12.x or newer
+- TypeScript
+
+To install, run `npm i` to pull in dependencies.
 
 ## Building the project
 
-1. install Node and Typescript
 2. in the repo directory, type `npm run build`
 3. HTML and RSS output will be placed in a `html` directory
 
